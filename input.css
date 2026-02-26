@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+
+body {
+    background-color: black;
+    color: white;
+}
+
+header {
+
+    width: 80%;
+    height: 30px;
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+
+}
+
+.search-bar {
+ 
+
+}
+
+.search-input:focus {
+
+    outline: none;
+    /* border-color: #4CAF50; 
+    border-style: double;
+    border-width: 2px; */
+    /* 2px dashed #4CAF50; */
+
+}
+
+.forecast {
+
+    
+    display: flex;
+    gap: 10px;
+
+}
+
+.forecast .box {
+    background-color: aqua;
+    flex-grow: 1;
+    color: brown;
+    text-align: center;
+    margin: 10px;
+    width: 200px;
+    height: 200px;
+
+    margin-bottom: 80px;
+}
