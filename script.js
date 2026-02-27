@@ -1,11 +1,10 @@
 
 
-
 const apiKey = "09f4fb7bfd1840a655a2f17fda000ef4";
 let isCelsius = true;
 
-let currentWeatherData = null;  // extra
-let currentForecastData = null; // extra
+let currentWeatherData = null;
+let currentForecastData = null;
 
 const cityInput = document.getElementById("cityInput");
 const searchBtn = document.getElementById("searchBtn");
@@ -15,6 +14,7 @@ const forecastContainer = document.getElementById("forecastContainer");
 const errorBox = document.getElementById("errorBox");
 const unitToggle = document.getElementById("unitToggle");
 const recentCitiesDropdown = document.getElementById("recentCities");
+
 
 
 // SEARCH EVENT
@@ -47,7 +47,7 @@ unitToggle.addEventListener("click", () => {
 
     unitToggle.textContent = isCelsius ? "°F" : "°C";
 
-    displayTodayWeather(currentWeatherData); 
+    displayTodayWeather(currentWeatherData);
 
     displayForecast();  // re-render forecast 
 });
@@ -68,12 +68,32 @@ async function fetchWeather(city) {
         fetchForecast(city);
 
 
-        cityInput.value = '';  
+        cityInput.value = '';
 
     } catch (err) {
         showError(err.message);
     }
 
+}
+
+
+
+// Fetch Weather by Coordinates / LOCATION
+async function fetchWeatherByCoords(lat, lon) {
+    try {
+        const res = await fetch(
+            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
+        );
+
+        if (!res.ok) throw new Error("Unable to fetch location weather");
+
+        const data = await res.json();
+        displayTodayWeather(data);
+        fetchForecast(data.name);
+
+    } catch (err) {
+        showError("Location access failed");
+    }
 }
 
 
@@ -94,7 +114,9 @@ function displayTodayWeather(data) {
     <p>Wind: ${data.wind.speed} m/s</p>
   `;
 
-    //dynamicBackground(data.weather[0].main);
+
+    // Updating emoji dynamically
+    updateWeatherEmoji(data.weather[0].main);
 
     if (data.main.temp > 40) {
         showError("⚠ Extreme Heat Alert!");
@@ -110,9 +132,9 @@ async function fetchForecast(city) {
     const data = await res.json();
 
 
-    currentForecastData = data;   // 👈 STORE FULL DATA      // extra
+    currentForecastData = data;
 
-    displayForecast();            // 👈 render using separate function    // extra
+    displayForecast();            // rendering seperate display for forecast 
 
 
     forecastContainer.innerHTML = "";
@@ -123,6 +145,7 @@ async function fetchForecast(city) {
 
     dailyData.forEach(day => {
         forecastContainer.innerHTML += `
+
       <div class="bg-white/20 p-4 rounded-xl text-center">
         <p>${day.dt_txt.split(" ")[0]}</p>
         <p>${day.main.temp}°C</p>
@@ -135,7 +158,7 @@ async function fetchForecast(city) {
 
 
 
-//display toogle forecast //extra
+//display forecast toggle 
 
 function displayForecast() {
 
@@ -155,7 +178,7 @@ function displayForecast() {
             temp = (temp * 9 / 5) + 32;
         }
 
-        // <h3>${temp.toFixed(1)}°</h3> ---> got replaced 
+
         forecastContainer.innerHTML += `
       <div class="forecast-card bg-white/20 p-4 rounded-xl text-center">
         <p>${day.dt_txt.split(" ")[0]}</p>
@@ -170,7 +193,7 @@ function displayForecast() {
     });
 }
 
-//-------------
+
 
 
 // ERROR DISPLAY
@@ -195,9 +218,6 @@ function saveRecentCity(city) {
     loadRecentCities();
 }
 
-
-
-// updated function # 2 again //extra
 
 
 const clearHistoryBtn = document.getElementById("clearHistoryBtn");
@@ -230,7 +250,7 @@ function loadRecentCities() {
 
 
 
-// new eventListener calling:  // extra
+// logic for rendering recentCitiesDropdown
 recentCitiesDropdown.addEventListener("change", (e) => {
 
     const selectedCity = e.target.value;
@@ -239,7 +259,7 @@ recentCitiesDropdown.addEventListener("change", (e) => {
 
     fetchWeather(selectedCity);
 
-    // Reset back to placeholder after fetch
+    // Reseting back to placeholder after fetch
     setTimeout(() => {
         recentCitiesDropdown.value = "";
     }, 100);
@@ -247,7 +267,7 @@ recentCitiesDropdown.addEventListener("change", (e) => {
 
 
 
-//new -- logic for clear history
+// logic for clear history
 
 clearHistoryBtn.addEventListener("click", () => {
 
@@ -263,18 +283,38 @@ clearHistoryBtn.addEventListener("click", () => {
 
 
 
-
 loadRecentCities();
 
 
 
-// extra 
+// Weather to Emoji Image Mapping
+
+const weatherEmojiMap = {
+    Clear: "./src/images/clear.jpg",
+    Clouds: "./src/images/cloud1.jpg",
+    Rain: "./src/images/rain.jpg",
+    Drizzle: "./src/images/rain.jpg",
+    Snow: "./src/images/snow and thunder.jpg",
+    Thunderstorm: "./src/images/snow and thunder.jpg",
+    Mist: "./src/images/cloud1.jpg",
+    Fog: "./src/images/cloud1.jpg",
+    Haze: "./src/images/cloud1.jpg"
+};
 
 
-document.body.style.backgroundImage =
-    "url('cloud.jpg')";
+
+// Update Weather Emoji -- (weather fetching data accordance to day)
+
+function updateWeatherEmoji(weatherType) {
+    const emojiImg = document.getElementById("weatherEmojiImg");
+
+    const imgSrc = weatherEmojiMap[weatherType] || "./src/images/cloud1.jpg";
+
+    emojiImg.src = imgSrc;
+}
 
 
-// https://images.unsplash.com/photo-1592698117601-70c282996f9c //new
 
-// https://images.unsplash.com/photo-1502082553048-f009c37129b9     // old
+// setting background
+
+document.body.style.backgroundImage = "url('./src/images/cloud.jpg')";

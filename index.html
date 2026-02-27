@@ -6,25 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather Forecast Application</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap"
+        rel="stylesheet">
+
     <link rel="stylesheet" href="src/output.css" />
 </head>
 
-<body id="body" class="bg-gradient-to-r from-blue-400 to-indigo-600 min-h-screen text-white">
+<body id="body" class="min-h-screen text-white">
 
     <div class="container mx-auto p-4">
 
-        <!-- Header -->
 
-        <!-- extra -->
+        <!-- Header -->
         <div id="welcomeBox" class="welcome-box mb-5">
             🌤️ Search a city to see live weather forecast
         </div>
 
 
+
         <div class="flex flex-col md:flex-row justify-between items-center mb-6">
             <h1 class="text-3xl font-bold">🌦 Weather Forecast Application</h1>
 
-            <div class="flex gap-2 mt-4 md:mt-0">
+            <div class="flex flex-col gap-2 mt-4 md:flex-row">
                 <input id="cityInput" type="text" placeholder="Search city..." class="p-2 rounded text-black" />
 
 
@@ -37,7 +42,7 @@
                     <span class="loc-icon">📡</span>
                 </button>
 
-                <div class="history-wrapper">
+                <div class="history-delete">
                     <select id="recentCities" class="history-dropdown hidden">
                         <option value="" selected disabled>Select History</option>
                     </select>
@@ -57,11 +62,20 @@
         <!-- Error Message -->
         <div id="errorBox" class="hidden bg-red-500 p-3 rounded mb-4"></div>
 
+
         <!-- Today Card -->
         <div id="todayWeather" class="bg-white/20 backdrop-blur-md p-6 rounded-2xl shadow-xl text-center mb-6">
         </div>
 
+
+        <!-- Weather Emoji Display -->
+        <div id="weatherEmoji" class="weather-emoji-container">
+            <img id="weatherEmojiImg" src="">
+        </div>
+
+
         <!-- 5 Day Forecast -->
+
         <div id="forecastContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
         </div>
 
